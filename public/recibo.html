@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Recibo de renda</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="transaction-page">
+    <header class="form-header">
+      <a href="./" class="secondary-button">
+        <svg class="button-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg>
+        Voltar
+      </a>
+      <div>
+        <p class="eyebrow">CADASTRO</p>
+        <h1 id="titulo">Novo recibo</h1>
+      </div>
+    </header>
+
+    <form id="formRecibo" class="transaction-form">
+      <div class="transaction-title">Informações Gerais</div>
+
+      <section class="transaction-section">
+        <div class="transaction-grid general-grid">
+          <label>Recibo<input name="ReciboRendaNumero" type="number" min="1" readonly></label>
+          <label>Data de emissão<input name="ReciboRendaDataEmissao" type="date" required></label>
+          <label>Emitente<input name="ReciboRendaEmitente" maxlength="100" required></label>
+          <label>NIF<input name="ReciboRendaEmitenteNIF" maxlength="20"></label>
+          <label>Locador/Sublocador (Senhorio) Cedente<input name="ReciboRendaLocador" maxlength="100" required></label>
+          <label>NIF<input name="ReciboRendaLocadorNIF" maxlength="20"></label>
+          <label><span class="sr-only">Sub locador</span><input name="ReciboRendaSubLocador" maxlength="100"></label>
+          <label>NIF<input name="ReciboRendaSubLocadorNIF" maxlength="20"></label>
+        </div>
+      </section>
+
+      <fieldset class="transaction-fieldset">
+        <legend>Locatário/Sublocatário (Inquilino) Cessionário</legend>
+        <div class="transaction-grid tenant-grid">
+          <label>Locatário<input name="ReciboRendaLocatario" maxlength="100" required></label>
+          <label>NIF<input name="ReciboRendaLocatarioNIF" maxlength="20"></label>
+          <label>NIF Estrangeiro / Outro Doc. Identificação<input name="ReciboRendaLocatarioNIFEstrangeiro" maxlength="40"></label>
+          <label>País<input name="ReciboRendaLocatarioNIFPais" maxlength="20"></label>
+          <label><span class="sr-only">Sub locatário</span><input name="ReciboRendaSubLocatario" maxlength="100"></label>
+          <label><span class="sr-only">NIF sub locatário</span><input name="ReciboRendaSubLocatarioNIF" maxlength="20"></label>
+          <label><span class="sr-only">NIF estrangeiro sub locatário</span><input name="ReciboRendaSubLocatarioNIFEstrangeiro" maxlength="40"></label>
+          <label><span class="sr-only">País NIF sub locatário</span><input name="ReciboRendaSubLocatarioNIFPais" maxlength="20"></label>
+        </div>
+      </fieldset>
+
+      <section class="transaction-section property-section">
+        <div class="contract-options">
+          <label>Tipo de contrato
+            <select name="ReciboRendaTipoContrato">
+              <option value="A">Arrendamento</option>
+              <option value="S">Subarrendamento</option>
+              <option value="C">Cedência de uso do prédio ou parte dele que não arrendamento</option>
+              <option value="M">Aluguer de maquinismos e mobiliário instalados no imóvel locado</option>
+            </select>
+          </label>
+        </div>
+        <div class="transaction-grid property-grid">
+          <label>Freguesia<input name="ReciboRendaFreguesia" maxlength="20"></label>
+          <label>Tipo
+            <select name="ReciboRendaTipo">
+              <option value="U">Urbano</option>
+              <option value="R">Rústico</option>
+              <option value="O">Outro</option>
+            </select>
+          </label>
+          <label>Artigo<input name="ReciboRendaArtigo" maxlength="20"></label>
+          <label>Fração/Parte<input name="ReciboRendaFracao" maxlength="20"></label>
+          <label class="span-all">Localização/Morada<input name="ReciboRendaLocalizacao" maxlength="100" required></label>
+        </div>
+      </section>
+
+      <fieldset class="transaction-fieldset rent-fieldset">
+        <legend>Renda</legend>
+        <div class="transaction-grid rent-grid">
+          <label>De<input name="ReciboRendaPeriodoDe" type="date" required></label>
+          <label>Até<input name="ReciboRendaPeriodoAte" type="date" required></label>
+          <label>Valor<input name="ReciboRendaValor" type="number" step="0.01" required></label>
+          <label>Importância recebida a título de
+            <select name="ReciboRendaTituloDe">
+              <option value="R">Renda</option>
+              <option value="C">Caução</option>
+              <option value="A">Adiantamento</option>
+            </select>
+          </label>
+          <label>Retenção de IRS<input name="ReciboRendaRetencaoIRS" type="number" step="0.01"></label>
+          <label>Importância recebida<input class="readonly-display" data-importancia-recebida readonly></label>
+          <label>Data de recebimento<input name="ReciboRendaDataRecebimento" type="date"></label>
+        </div>
+      </fieldset>
+
+      <section class="transaction-section">
+        <label>Informações complementares<textarea name="ReciboRendaInfComplementar" maxlength="200"></textarea></label>
+      </section>
+
+      <p id="status" class="status"></p>
+      <div class="form-actions">
+        <button type="submit">
+          <svg class="button-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2Z"></path><path d="M17 21v-8H7v8"></path><path d="M7 3v5h8"></path></svg>
+          Salvar
+        </button>
+      </div>
+    </form>
+  </main>
+  <script src="recibo.js"></script>
+</body>
+</html>

@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Recibos de renda</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand">
+        <img class="brand-photo" src="images/chef-paulo.jpg" alt="">
+        <div>
+          <strong>Orchidperform Unipessoal Lda</strong>
+          <span>Recibos de renda</span>
+        </div>
+      </div>
+      <div class="filters">
+        <label>
+          Pesquisar
+          <input id="busca" type="search" placeholder="Numero, locatario, local">
+        </label>
+        <label>
+          Ano
+          <input id="ano" type="number" min="1900" max="2100" placeholder="Todos">
+        </label>
+        <div class="filter-actions">
+          <button id="buscar" type="button">
+            <svg class="button-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg>
+            Buscar
+          </button>
+          <button id="limpar" type="button" class="secondary-button">
+            <svg class="button-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18"></path><path d="M8 6V4h8v2"></path><path d="M19 6l-1 14H6L5 6"></path><path d="M10 11v5"></path><path d="M14 11v5"></path></svg>
+            Limpar
+          </button>
+        </div>
+      </div>
+      <div id="lista" class="receipt-list" aria-live="polite"></div>
+    </aside>
+    <main class="content">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">RECIBOS</p>
+          <h1>Recibos de renda</h1>
+        </div>
+        <div class="top-actions">
+          <a id="novo" class="primary-link" href="recibo.html" hidden>
+            <svg class="button-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14"></path><path d="M5 12h14"></path></svg>
+            Novo recibo
+          </a>
+          <button id="login" type="button">
+            <svg class="button-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path><path d="m10 17 5-5-5-5"></path><path d="M15 12H3"></path></svg>
+            Login
+          </button>
+          <button id="logout" type="button" class="secondary-button" hidden>
+            <svg class="button-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><path d="m16 17 5-5-5-5"></path><path d="M21 12H9"></path></svg>
+            Sair
+          </button>
+        </div>
+      </header>
+      <section id="detalhe" class="detail" tabindex="-1">
+        <div class="empty-state">
+          <h2>Selecione um recibo</h2>
+          <p>Use a pesquisa ao lado para encontrar um recibo do acervo.</p>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <dialog id="loginDialog" class="login-dialog">
+    <form method="dialog" id="loginForm">
+      <h2>Login</h2>
+      <label>
+        Usuario
+        <input id="usuario" autocomplete="username">
+      </label>
+      <label>
+        Senha
+        <input id="senha" type="password" autocomplete="current-password">
+      </label>
+      <p id="loginStatus" class="status"></p>
+      <div class="dialog-actions">
+        <button type="submit">
+          <svg class="button-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path><path d="m10 17 5-5-5-5"></path><path d="M15 12H3"></path></svg>
+          Entrar
+        </button>
+      </div>
+    </form>
+  </dialog>
+
+  <script src="app.js"></script>
+</body>
+</html>
