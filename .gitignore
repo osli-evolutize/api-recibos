@@ -4,5 +4,3 @@ data/
 *.db
 *.db-shm
 *.db-wal
-public/images/
-
