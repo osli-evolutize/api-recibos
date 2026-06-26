@@ -259,6 +259,7 @@ function imprimirRecibo(recibo) {
     <head>
       <meta charset="utf-8">
       <title>Recibo ${escaparHtml(recibo.ReciboRendaNumero)}</title>
+      <link rel="icon" type="image/jpeg" href="images/chef-paulo.jpg">
       <style>
         @page { size: A4 portrait; margin: 8mm; }
         * { box-sizing: border-box; }
