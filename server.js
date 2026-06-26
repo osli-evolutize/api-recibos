@@ -117,9 +117,29 @@ function estaAutenticado(req) {
   return Boolean(token && sessoes.has(token));
 }
 
+function obterSessao(req) {
+  const token = lerCookies(req).recibosSessao;
+  return token ? sessoes.get(token) : null;
+}
+
+function usuarioAdmin(req) {
+  const sessao = obterSessao(req);
+  return String(sessao?.usuario || "").trim().toLowerCase() === "admin";
+}
+
 function exigirAutenticacao(req, res) {
   if (estaAutenticado(req)) return true;
   enviarJson(res, 401, { erro: "Login necessario" });
+  return false;
+}
+
+function exigirAdmin(req, res) {
+  if (usuarioAdmin(req)) return true;
+  if (!estaAutenticado(req)) {
+    enviarJson(res, 401, { erro: "Login necessario" });
+    return false;
+  }
+  enviarJson(res, 403, { erro: "Acesso permitido apenas para o usuario admin" });
   return false;
 }
 
@@ -527,7 +547,7 @@ async function tratarApi(req, res, url) {
     if (req.method === "POST" && url.pathname === "/api/auth/login") return login(req, res);
     if (req.method === "POST" && url.pathname === "/api/auth/logout") return logout(req, res);
     if (url.pathname === "/api/usuarios") {
-      if (!exigirAutenticacao(req, res)) return;
+      if (!exigirAdmin(req, res)) return;
       if (req.method === "GET") return listarUsuarios(res);
       if (req.method === "POST") return salvarUsuario(req, res);
       if (req.method === "DELETE") return excluirUsuario(req, res, url);
@@ -568,7 +588,7 @@ function servirArquivo(req, res, url) {
   let pathname = decodeURIComponent(url.pathname);
   if (pathname === "/") pathname = "/index.html";
 
-  if (req.method === "GET" && pathname === "/usuarios.html" && !estaAutenticado(req)) {
+  if (req.method === "GET" && pathname === "/usuarios.html" && !usuarioAdmin(req)) {
     res.writeHead(302, { Location: "./" });
     res.end();
     return;

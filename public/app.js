@@ -2,6 +2,7 @@ const estado = {
   autenticado: false,
   recibos: [],
   selecionado: null,
+  usuario: "",
   pagina: 1,
   porPagina: 10,
 };
@@ -80,10 +81,11 @@ async function enviarJson(url, dados, metodo = "POST") {
 }
 
 function renderizarAuth() {
+  const admin = String(estado.usuario || "").trim().toLowerCase() === "admin";
   els.login.hidden = estado.autenticado;
   els.logout.hidden = !estado.autenticado;
   els.novo.hidden = !estado.autenticado;
-  els.usuarios.hidden = !estado.autenticado;
+  els.usuarios.hidden = !estado.autenticado || !admin;
   document.body.classList.toggle("auth-locked", !estado.autenticado);
 }
 
@@ -229,6 +231,7 @@ async function carregarLista() {
 async function carregarAuth() {
   const status = await buscarJson("api/auth/status");
   estado.autenticado = status.autenticado;
+  estado.usuario = estado.autenticado ? status.usuario || "" : "";
   renderizarAuth();
   if (!estado.autenticado) bloquearAteLogin();
   else if (!estado.selecionado) {
