@@ -30,6 +30,7 @@ body {
 body.auth-locked .filters,
 body.auth-locked .receipt-list,
 body.auth-locked .top-actions .primary-link,
+body.auth-locked .top-actions #usuarios,
 body.auth-locked .top-actions #logout {
   display: none;
 }
@@ -582,6 +583,60 @@ h1 {
   min-height: 82px;
 }
 
+.user-form {
+  margin-bottom: 18px;
+}
+
+.user-form-grid {
+  display: grid;
+  grid-template-columns: minmax(150px, 0.7fr) minmax(220px, 1fr) minmax(220px, 1fr) minmax(140px, 0.6fr) minmax(90px, 0.4fr);
+  gap: 14px;
+}
+
+.user-list-section h2 {
+  margin: 0 0 14px;
+}
+
+.user-list {
+  display: grid;
+  gap: 10px;
+}
+
+.user-card {
+  display: grid;
+  grid-template-columns: minmax(100px, 0.7fr) minmax(180px, 1fr) minmax(180px, 1fr) 90px 80px auto;
+  gap: 12px;
+  align-items: center;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 12px;
+  background: #fff;
+}
+
+.user-card strong {
+  color: var(--accent);
+}
+
+.user-card em {
+  color: var(--muted);
+  font-style: normal;
+  font-weight: 700;
+}
+
+.user-card-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.status[data-tipo="ok"] {
+  color: var(--accent);
+}
+
+.status[data-tipo="erro"] {
+  color: var(--danger);
+}
+
 .readonly-display {
   color: #333;
   font-weight: 700;
@@ -646,5 +701,18 @@ h1 {
 
   .definition-list {
     grid-template-columns: 1fr;
+  }
+
+  .user-form-grid,
+  .user-card {
+    grid-template-columns: 1fr;
+  }
+
+  .user-card-actions {
+    justify-content: stretch;
+  }
+
+  .user-card-actions button {
+    flex: 1;
   }
 }

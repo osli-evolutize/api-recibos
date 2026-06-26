@@ -18,6 +18,7 @@ const els = {
   login: document.querySelector("#login"),
   logout: document.querySelector("#logout"),
   novo: document.querySelector("#novo"),
+  usuarios: document.querySelector("#usuarios"),
   loginDialog: document.querySelector("#loginDialog"),
   loginForm: document.querySelector("#loginForm"),
   usuario: document.querySelector("#usuario"),
@@ -82,6 +83,7 @@ function renderizarAuth() {
   els.login.hidden = estado.autenticado;
   els.logout.hidden = !estado.autenticado;
   els.novo.hidden = !estado.autenticado;
+  els.usuarios.hidden = !estado.autenticado;
   document.body.classList.toggle("auth-locked", !estado.autenticado);
 }
 

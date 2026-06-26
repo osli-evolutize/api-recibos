@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Usuarios</title>
+  <link rel="icon" type="image/jpeg" href="images/chef-paulo.jpg">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="form-page">
+  <main class="form-shell">
+    <header class="form-header">
+      <a class="secondary-button" href="./">
+        <svg class="button-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m15 18-6-6 6-6"></path></svg>
+        Voltar
+      </a>
+      <div>
+        <p class="eyebrow">CADASTRO</p>
+        <h1>Usuarios</h1>
+      </div>
+    </header>
+
+    <form id="formUsuario" class="transaction-form user-form">
+      <div class="transaction-title">Dados do usuario</div>
+      <input type="hidden" name="codigoOriginal">
+      <section class="form-section">
+        <div class="user-form-grid">
+          <label>Usuario<input name="codigo" maxlength="60" autocomplete="username" required></label>
+          <label>Nome<input name="nome" maxlength="60" required></label>
+          <label>Email<input name="email" type="email" maxlength="120"></label>
+          <label>Senha<input name="senha" type="password" maxlength="20" autocomplete="new-password"></label>
+          <label>Perfil<input name="perfil" type="number" step="1" value="0"></label>
+        </div>
+        <p class="muted">Ao editar, deixe a senha em branco para manter a senha atual.</p>
+      </section>
+      <div class="form-actions">
+        <p id="mensagemUsuario" class="status"></p>
+        <div class="dialog-actions">
+          <button type="button" class="secondary-button" id="btnNovo">
+            <svg class="button-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14"></path><path d="M5 12h14"></path></svg>
+            Novo
+          </button>
+          <button type="submit">
+            <svg class="button-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg>
+            Salvar
+          </button>
+        </div>
+      </div>
+    </form>
+
+    <section class="form-section user-list-section">
+      <h2>Usuarios cadastrados</h2>
+      <div id="listaUsuarios" class="user-list"></div>
+    </section>
+  </main>
+
+  <script src="usuarios.js"></script>
+</body>
+</html>

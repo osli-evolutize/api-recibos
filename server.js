@@ -211,6 +211,124 @@ async function logout(req, res) {
   res.end(JSON.stringify({ ok: true }));
 }
 
+async function listarUsuarios(res) {
+  const pool = await obterPool();
+  const resultado = await pool.request().query(`
+    SELECT
+      LTRIM(RTRIM(usucod)) AS codigo,
+      LTRIM(RTRIM(usunome)) AS nome,
+      LTRIM(RTRIM(ISNULL(usuemail, ''))) AS email,
+      usuperfil AS perfil
+    FROM dbo.Usuario
+    ORDER BY LTRIM(RTRIM(usucod));
+  `);
+
+  enviarJson(res, 200, resultado.recordset);
+}
+
+async function salvarUsuario(req, res) {
+  const dados = await lerCorpoJson(req, 32 * 1024);
+  const codigoOriginal = trim(dados.codigoOriginal);
+  const codigo = trim(dados.codigo);
+  const nome = trim(dados.nome);
+  const email = trim(dados.email);
+  const senha = String(dados.senha || "");
+  const perfil = Number(dados.perfil || 0);
+
+  if (!codigo || !nome) {
+    enviarJson(res, 400, { erro: "Informe usuario e nome" });
+    return;
+  }
+
+  if (!codigoOriginal && !senha) {
+    enviarJson(res, 400, { erro: "Informe a senha" });
+    return;
+  }
+
+  const pool = await obterPool();
+  const existente = await pool.request()
+    .input("codigo", sql.VarChar(60), codigo)
+    .query(`
+      SELECT TOP 1 LTRIM(RTRIM(usucod)) AS codigo
+      FROM dbo.Usuario
+      WHERE LTRIM(RTRIM(usucod)) = @codigo;
+    `);
+
+  if (existente.recordset.length && (!codigoOriginal || existente.recordset[0].codigo !== codigoOriginal)) {
+    enviarJson(res, 409, { erro: "Ja existe um usuario com este codigo" });
+    return;
+  }
+
+  if (codigoOriginal) {
+    const request = pool.request()
+      .input("codigoOriginal", sql.VarChar(60), codigoOriginal)
+      .input("codigo", sql.VarChar(60), codigo)
+      .input("nome", sql.VarChar(60), nome)
+      .input("email", sql.VarChar(120), email)
+      .input("perfil", sql.Int, perfil);
+
+    if (senha) request.input("senha", sql.VarChar(20), senha);
+
+    const resultado = await request.query(`
+      UPDATE dbo.Usuario
+      SET
+        usucod = @codigo,
+        usunome = @nome,
+        usuemail = @email,
+        usuperfil = @perfil
+        ${senha ? ", ususenha = @senha" : ""}
+      WHERE LTRIM(RTRIM(usucod)) = @codigoOriginal;
+      SELECT @@ROWCOUNT AS alteradas;
+    `);
+
+    if (!resultado.recordset[0]?.alteradas) {
+      enviarJson(res, 404, { erro: "Usuario nao encontrado" });
+      return;
+    }
+
+    enviarJson(res, 200, { ok: true });
+    return;
+  }
+
+  await pool.request()
+    .input("codigo", sql.VarChar(60), codigo)
+    .input("nome", sql.VarChar(60), nome)
+    .input("email", sql.VarChar(120), email)
+    .input("senha", sql.VarChar(20), senha)
+    .input("perfil", sql.Int, perfil)
+    .query(`
+      INSERT INTO dbo.Usuario (usucod, usunome, usuemail, ususenha, usuperfil)
+      VALUES (@codigo, @nome, @email, @senha, @perfil);
+    `);
+
+  enviarJson(res, 201, { ok: true });
+}
+
+async function excluirUsuario(req, res, url) {
+  const codigo = trim(url.searchParams.get("codigo"));
+
+  if (!codigo) {
+    enviarJson(res, 400, { erro: "Informe o usuario" });
+    return;
+  }
+
+  const pool = await obterPool();
+  const resultado = await pool.request()
+    .input("codigo", sql.VarChar(60), codigo)
+    .query(`
+      DELETE FROM dbo.Usuario
+      WHERE LTRIM(RTRIM(usucod)) = @codigo;
+      SELECT @@ROWCOUNT AS alteradas;
+    `);
+
+  if (!resultado.recordset[0]?.alteradas) {
+    enviarJson(res, 404, { erro: "Usuario nao encontrado" });
+    return;
+  }
+
+  enviarJson(res, 200, { ok: true });
+}
+
 async function listarRecibos(res, url) {
   const busca = trim(url.searchParams.get("busca"));
   const ano = trim(url.searchParams.get("ano"));
@@ -408,6 +526,12 @@ async function tratarApi(req, res, url) {
     }
     if (req.method === "POST" && url.pathname === "/api/auth/login") return login(req, res);
     if (req.method === "POST" && url.pathname === "/api/auth/logout") return logout(req, res);
+    if (url.pathname === "/api/usuarios") {
+      if (!exigirAutenticacao(req, res)) return;
+      if (req.method === "GET") return listarUsuarios(res);
+      if (req.method === "POST") return salvarUsuario(req, res);
+      if (req.method === "DELETE") return excluirUsuario(req, res, url);
+    }
     if (url.pathname === "/api/recibos" || url.pathname.startsWith("/api/recibos/")) {
       if (!exigirAutenticacao(req, res)) return;
     }
@@ -443,6 +567,12 @@ const tipos = {
 function servirArquivo(req, res, url) {
   let pathname = decodeURIComponent(url.pathname);
   if (pathname === "/") pathname = "/index.html";
+
+  if (req.method === "GET" && pathname === "/usuarios.html" && !estaAutenticado(req)) {
+    res.writeHead(302, { Location: "./" });
+    res.end();
+    return;
+  }
 
   const caminho = path.normalize(path.join(publicDir, pathname));
   if (!caminho.startsWith(publicDir)) {
